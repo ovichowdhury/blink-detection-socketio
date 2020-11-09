@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+        integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <p>Web sockeet</p>
+    <img src="./image.jpg" alt="Girl in a jacket" width="250" height="250" id="im">
+    <script type="text/javascript" charset="utf-8">
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            var dataURL = canvas.toDataURL("image/png");
+            return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        }
+
+
+        var socket = io('ws://127.0.0.1:5001');
+        socket.on('connect', function () {
+            console.log("From connect...");
+            const image = getBase64Image(document.getElementById("im"));
+            //console.log(image)
+            socket.emit('is_eye_open', { image: image});
+
+        });
+
+        socket.on('is_eye_open_res', (data) => {
+            console.log("res: ", data)
+        })
+    </script>
+</body>
+
+</html>
